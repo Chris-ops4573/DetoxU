@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const app = express()
 require('dotenv').config()
 const authRoutes = require("./routes/authRoutes")
+const cookieParser = require("cookie-parser")
 
 app.get('/', (req, res) => {
     res.json({mssg: "Tracker"})
@@ -13,8 +14,11 @@ app.use((req, res, next) => {
     next()
 })
 app.use(express.json())
+app.use(cookieParser())
 
 app.use(authRoutes)
+
+
 
 mongoose.connect(process.env.MONGO_URI)
     .then(() => {
