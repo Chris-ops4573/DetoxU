@@ -11,13 +11,28 @@ const Home = () => {
             console.log(isAuth)
             if (!isAuth) {
                 navigate('/login');
-            }
+            }   
         };
         checkAuth();
     }, [navigate]);
 
+    const handleLoggingOut = async () => {
+        try{
+            const response = await fetch('/logout', {
+                method: 'POST', 
+                credentials: 'include'
+            })
+            navigate('/login')
+        } catch(err){
+            console.log(err)
+        }
+    }
+
     return (
-        <h1>Main Page</h1>
+        <div>
+            <h1>Main Page</h1>
+            <button onClick={handleLoggingOut}>Log out</button>
+        </div>
     );
 };
 
