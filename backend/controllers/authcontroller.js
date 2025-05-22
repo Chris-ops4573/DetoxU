@@ -5,6 +5,16 @@ const handleError = (err) => {
     console.log(err.message, err.code)
     let error = {email: '', password: '', username: ''}
 
+    //incorrect email 
+    if(err.message === 'incorrect email'){
+        error.email = 'email not registered'
+    }
+
+    //incorrect password 
+    if(err.message === 'incorrect password'){
+        error.password = 'Password is incorrect'
+    }
+
     //duplicate errors
     if(err.code === 11000){
         error.email = 'email already regsitered'
@@ -50,8 +60,18 @@ module.exports.signup_post = async (req, res) => {
     }
 }
 
-module.exports.login_post = (req, res) => {
+module.exports.login_post = async (req, res) => {
     const {email, password} = req.body
-    res.send("signing in user")
+
+    try{
+        const user = await User.login(email, password)
+        const token = createToken(user._id)
+        res.cookie('jwt', token, {httpOnly: true, maxAge: 1000 * maxAge})
+        res.status(200).json({user: user._id})
+        console.log(user)
+    } catch(err){
+        const errors = handleError(err)
+        res.status(400).json({errors})
+    }
 }
 
