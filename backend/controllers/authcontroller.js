@@ -37,6 +37,25 @@ const createToken = (id) => {
     })
 }
 
+//middlewear for checking auth
+module.exports.requireAuth = (req, res, next) => {
+    const token = req.cookies.jwt
+    if(token){
+        jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken) => {
+            if(err){
+                console.log(err.message)
+                res.status(401).json({error: 'unverifiable token'})
+            } else{
+                req.userId = decodedToken.id
+                console.log(decodedToken)
+                next()
+            }
+        })
+    } else{
+        res.status(401).json({error: 'invalid token'})
+    }
+}
+
 module.exports.signup_get = (req, res) => {
     res.send("singup page")
 }

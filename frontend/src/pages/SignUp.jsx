@@ -33,7 +33,7 @@ const SignUp = () => {
                 setUsernameError(data.errors.username)
             }
             if(data.user){
-                navigate('/')
+                navigate('/home')
             }
         } catch(err) {
             console.log(err)

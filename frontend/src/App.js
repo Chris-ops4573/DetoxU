@@ -1,6 +1,7 @@
 import SignUp from "./pages/SignUp";
 import LogIn from "./pages/LogIn";
-import {BrowserRouter, Routes, Route} from 'react-router-dom'
+import Home from "./pages/Home";
+import {BrowserRouter, Routes, Route, Navigate} from 'react-router-dom'
 
 function App() {
   return (
@@ -8,6 +9,10 @@ function App() {
       <BrowserRouter>
         <div className='pages'>
           <Routes>
+            <Route 
+              path="/" 
+              element={<Navigate to="/home" replace />} 
+              />
             <Route 
               path="/signup"
               element={<SignUp />}
@@ -17,7 +22,8 @@ function App() {
               element={<LogIn />}
             />
             <Route
-              path="/"
+              path="/home"
+              element={<Home />}
             />
           </Routes>
         </div>

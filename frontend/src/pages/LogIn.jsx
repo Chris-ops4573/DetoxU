@@ -16,7 +16,8 @@ const LogIn = () => {
             const response = await fetch('/login', {
                 method: 'POST',
                 body: JSON.stringify(signupDetails),
-                headers: {'Content-Type': 'application/json'}
+                headers: {'Content-Type': 'application/json'},
+                credentials: 'include'
             })
             if(response.ok){
                 setEmail("")
@@ -28,7 +29,7 @@ const LogIn = () => {
                 setPasswordError(data.errors.password)
             }
             if(data.user){
-                navigate('/')
+                navigate('/home')
             }
         } catch(err) {
             console.log(err)
@@ -43,7 +44,7 @@ const LogIn = () => {
     return(
         <div>
             <form onSubmit={handleSubmit}>
-                <h2>Sign Up</h2>
+                <h2>Log In</h2>
                 <label>Email</label>
                 <input type="text" value={email} required onChange={(e) => setEmail(e.target.value)} />
                 <p>{emailError}</p>
