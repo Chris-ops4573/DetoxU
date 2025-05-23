@@ -46,6 +46,7 @@ module.exports.requireAuth = (req, res, next) => {
                 console.log(err.message)
                 res.status(401).json({error: 'unverifiable token'})
             } else{
+                console.log("In require auth")
                 req.userId = decodedToken.id
                 console.log(decodedToken)
                 next()
@@ -53,6 +54,34 @@ module.exports.requireAuth = (req, res, next) => {
         })
     } else{
         res.status(401).json({error: 'invalid token'})
+    }
+}
+
+//middlewear for checking which user is logged in
+module.exports.checkUser =  (req, res, next) => {
+    const token = req.cookies.jwt
+    if(token){
+        jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
+            if(err){
+                console.log(err.message)                
+                req.user = null
+                next()
+            } else{
+                try {
+                    const userLoggedIn = await User.findById(decodedToken.id);
+                    req.user = userLoggedIn;
+                    next();
+                } catch (dbError) {
+                    console.log('Database error:', dbError);
+                    req.user = null;
+                    next();
+                }
+           }
+        })    
+    } else{
+        console.log('token invalid')
+        req.user = null
+        next()
     }
 }
 
